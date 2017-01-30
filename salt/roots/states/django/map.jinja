@@ -1,0 +1,34 @@
+{% set django = salt['grains.filter_by']({
+    'default': {
+        'deps': {
+            'freetype': 'freetype2',
+            'png': 'png',
+            'jpeg': 'jpeg',
+            'tiff': 'tiff',
+        }
+    },
+    'RedHat': {
+        'deps': {
+            'freetype': 'freetype',
+            'png': 'libpng-devel',
+            'jpeg': 'libjpeg-turbo-devel',
+            'tiff': 'libtiff-devel',
+        }
+    },
+    'Debian': {
+        'deps': {
+            'freetype': 'libfreetype6-dev',
+            'png': 'libpng-dev',
+            'jpeg': 'libjpeg8-dev',
+            'tiff': 'libtiff-dev',
+        }
+    },
+    'FreeBSD': {
+        'deps': {
+            'freetype': 'freetype2',
+            'png': 'png',
+            'jpeg': 'openjpeg15',
+            'tiff': 'tiff',
+        }
+    },
+}, merge=salt['pillar.get']('django:lookup')) %}
