@@ -2,6 +2,7 @@
 
 include:
   - postgres.client
+  - postgres.dev
   - python
 
 django-deps:
@@ -35,7 +36,9 @@ git-django-prod:
 /srv/django/venv:
   virtualenv.managed:
     - python: python3.5
-    - requirements: /srv/django/elevennote/requirements/production.txt
+    - requirements: /srv/django/elevennote/requirements/base.txt
     - require:
+      - sls: python
       - pip: virtualenv
       - git: git-django-prod
+      - pkg: install-postgres-dev-package

@@ -1,5 +1,8 @@
 {% from "python/map.jinja" import python with context %}
 
+include:
+  - base
+
 pip:
   pkg.installed:
     - name: {{ python.pip_pkg }}
@@ -30,4 +33,5 @@ install-python35:
     - unless: which python3.5
     - require:
       - pkg: python-dev-packages
+      - pkg: base-packages
 
