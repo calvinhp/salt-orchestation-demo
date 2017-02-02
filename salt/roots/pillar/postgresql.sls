@@ -23,7 +23,7 @@ postgres:
 
   acls:
     - ['host', 'elevennote_dev', 'elevennote_dev', '10.10.10.0/24']
-    - ['host', 'elevennote_prod', 'elevenote_prod', '10.10.10.0/24']
+    - ['host', 'elevennote_prod', 'elevennote_prod', '10.10.10.0/24']
 
   # PostgreSQL service name
   service: postgresql-9.6

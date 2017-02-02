@@ -36,9 +36,19 @@ git-django-prod:
 /srv/django/venv:
   virtualenv.managed:
     - python: python3.5
-    - requirements: /srv/django/elevennote/requirements/base.txt
+    - requirements: /srv/django/elevennote/requirements/production.txt
     - require:
       - sls: python
       - pip: virtualenv
       - git: git-django-prod
       - pkg: install-postgres-dev-package
+
+/srv/django/elevennote/config/settings/.env:
+  file.managed:
+    - user: vagrant
+    - group: vagrant
+    - mode: 664
+    - source: salt://django/files/env
+    - template: jinja
+    - require:
+      - git: git-django-prod
