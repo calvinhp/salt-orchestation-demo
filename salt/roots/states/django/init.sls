@@ -8,7 +8,7 @@ include:
   - python
   - nginx
   - supervisor
-  - uswgi
+  - uwsgi
 
 django-deps:
     pkg.installed:
@@ -54,7 +54,7 @@ git-django-prod:
     - require:
       - git: git-django-prod
     - require_in:
-      - file: uswgi-django-config
+      - file: uwsgi-django-config
 
 nginx-django-config:
   file.managed:
