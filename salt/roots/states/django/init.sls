@@ -1,11 +1,13 @@
 {% from "map.jinja" import global with context %}
 {% from "django/map.jinja" import django with context %}
+{% from "supervisor/map.jinja" import supervisor with context %}
 
 include:
   - postgres.client
   - postgres.dev
   - python
   - nginx
+  - supervisor
   - uswgi
 
 django-deps:
@@ -80,7 +82,41 @@ uwsgi-django-config:
        - file: uwsgi-config-dir
        - file: uwsgi-log-dir
 
+supervisor-django-config:
+  file.managed:
+    - name: {{ supervisor.conf_dir }}/django.conf
+    - user: root
+    - group: {{ global.group }}
+    - mode: 664
+    - makedirs: True
+    - source: salt://django/files/supervisor-django.conf
+    - template: jinja
+    - require:
+      - file: supervisord-confd
+    - require_in:
+      - service: supervisord-service
+
 vagrant:
   group.present:
     - addusers:
       - nginx
+
+django_syncdb:
+  module.run:
+    - name: django.syncdb
+    - settings_module: config.settings.production
+    - bin_env: /srv/django/venv
+    - pythonpath: /srv/django/{{ salt['pillar.get']('django:projectname') }}
+    - require:
+      - git: git-django-prod
+      - virtualenv: /srv/django/venv
+
+django_collectstatic:
+  module.run:
+    - name: django.collectstatic
+    - settings_module: config.settings.production
+    - bin_env: /srv/django/venv
+    - pythonpath: /srv/django/{{ salt['pillar.get']('django:projectname') }}
+    - require:
+      - git: git-django-prod
+      - virtualenv: /srv/django/venv

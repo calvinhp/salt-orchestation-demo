@@ -1,0 +1,30 @@
+{% set supervisor = salt['grains.filter_by']({
+    'default': {
+        'conf_dir': '/etc/supervisord.d',
+        'conf_file': '/etc/supervisord.conf',
+        'init_file': '/etc/init.d/supervisor',
+        'init_source': 'salt://supervisor/files/supervisor.init',
+        'service': 'supervisor',
+    },
+    'RedHat': {
+        'conf_dir': '/etc/supervisord.d',
+        'conf_file': '/etc/supervisord.conf',
+        'init_file': '/etc/init.d/supervisor',
+        'init_source': 'salt://supervisor/files/supervisor.redhat',
+        'service': 'supervisord',
+    },
+    'Debian': {
+        'conf_dir': '/etc/supervisor/conf.d',
+        'conf_file': '/etc/supervisor/supervisord.conf',
+        'init_file': '/etc/init.d/supervisor',
+        'init_source': 'salt://supervisor/files/supervisor.ubuntu',
+        'service': 'supervisor',
+    },
+    'FreeBSD': {
+        'conf_dir': '/usr/local/etc/supervisord.d',
+        'conf_file': '/usr/local/etc/supervisord.conf',
+        'init_file': '/usr/local/etc/rc.d/supervisord',
+        'init_source': 'salt://supervisor/files/supervisord',
+        'service': 'supervisord',
+    },
+}, merge=salt['pillar.get']('supervisor:lookup')) %}
