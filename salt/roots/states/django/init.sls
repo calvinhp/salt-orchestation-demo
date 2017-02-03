@@ -5,6 +5,7 @@ include:
   - postgres.client
   - postgres.dev
   - python
+  - nginx
   - uswgi
 
 django-deps:
@@ -51,6 +52,20 @@ git-django-prod:
     - require:
       - git: git-django-prod
 
+nginx-django-config:
+  file.managed:
+    - name: {{ global.config_prefix }}/nginx/conf.d/django.conf
+    - user: root
+    - group: {{ global.group }}
+    - mode: 664
+    - makedirs: True
+    - source: salt://django/files/nginx-django.conf
+    - template: jinja
+    - require:
+      - pkg: nginx
+    - watch_in:
+      - service: nginx-service
+
 uwsgi-django-config:
   file.managed:
     - name: {{ global.config_prefix }}/uwsgi.d/django.ini
@@ -64,3 +79,8 @@ uwsgi-django-config:
        - pkg: uwsgi-plugin-python3
        - file: uwsgi-config-dir
        - file: uwsgi-log-dir
+
+vagrant:
+  group.present:
+    - addusers:
+      - nginx
