@@ -53,6 +53,8 @@ git-django-prod:
     - template: jinja
     - require:
       - git: git-django-prod
+    - require_in:
+      - file: uswgi-django-config
 
 nginx-django-config:
   file.managed:
@@ -64,8 +66,8 @@ nginx-django-config:
     - source: salt://django/files/nginx-django.conf
     - template: jinja
     - require:
-      - pkg: nginx
-    - watch_in:
+      - file: nginx-config
+    - listen_in:
       - service: nginx-service
 
 uwsgi-django-config:
@@ -80,7 +82,7 @@ uwsgi-django-config:
     - require:
        - pkg: uwsgi-plugin-python3
        - file: uwsgi-config-dir
-       - file: uwsgi-log-dir
+       - virtualenv: /srv/django/venv
 
 supervisor-django-config:
   file.managed:
@@ -93,6 +95,7 @@ supervisor-django-config:
     - template: jinja
     - require:
       - file: supervisord-confd
+      - file: uwsgi-django-config
     - require_in:
       - service: supervisord-service
 
@@ -100,13 +103,18 @@ vagrant:
   group.present:
     - addusers:
       - nginx
+    - require:
+      - pkg: nginx
+    - listen_in:
+      - service: nginx-service
 
-django_syncdb:
+django_migrate:
   module.run:
-    - name: django.syncdb
+    - name: django.command
     - settings_module: config.settings.production
     - bin_env: /srv/django/venv
     - pythonpath: /srv/django/{{ salt['pillar.get']('django:projectname') }}
+    - command: migrate
     - require:
       - git: git-django-prod
       - virtualenv: /srv/django/venv

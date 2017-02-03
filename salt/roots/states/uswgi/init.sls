@@ -22,6 +22,8 @@ uwsgi-log-dir:
 uwsgi-log-file:
   file.touch:
     - name: /var/log/uwsgi/out.log
+    - unless:
+      - ls /var/log/uwsgi/out.log
     - require:
       - file: uwsgi-log-dir
     - require_in:
@@ -30,6 +32,8 @@ uwsgi-log-file:
 uwsgi-err-log-file:
   file.touch:
     - name: /var/log/uwsgi/err.log
+    - unless:
+      - ls /var/log/uwsgi/err.log
     - require:
       - file: uwsgi-log-dir
     - require_in:
