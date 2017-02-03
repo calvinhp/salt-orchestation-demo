@@ -9,6 +9,7 @@ include:
   - nginx
   - supervisor
   - uwsgi
+  - django.collectstatic
 
 django-deps:
     pkg.installed:
@@ -33,6 +34,8 @@ git-django-prod:
     - target: /srv/django
     - require:
       - file: /srv/django
+    - require_in:
+      - module: django_collectstatic
 
 /srv/django/venv:
   virtualenv.managed:
@@ -43,6 +46,8 @@ git-django-prod:
       - pip: virtualenv
       - git: git-django-prod
       - pkg: install-postgres-dev-package
+    - require_in:
+      - module: django_collectstatic
 
 /srv/django/elevennote/config/settings/.env:
   file.managed:
@@ -115,16 +120,6 @@ django_migrate:
     - bin_env: /srv/django/venv
     - pythonpath: /srv/django/{{ salt['pillar.get']('django:projectname') }}
     - command: migrate
-    - require:
-      - git: git-django-prod
-      - virtualenv: /srv/django/venv
-
-django_collectstatic:
-  module.run:
-    - name: django.collectstatic
-    - settings_module: config.settings.production
-    - bin_env: /srv/django/venv
-    - pythonpath: /srv/django/{{ salt['pillar.get']('django:projectname') }}
     - require:
       - git: git-django-prod
       - virtualenv: /srv/django/venv
