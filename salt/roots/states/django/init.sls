@@ -1,19 +1,17 @@
+{% from "map.jinja" import global with context %}
 {% from "django/map.jinja" import django with context %}
 
 include:
   - postgres.client
   - postgres.dev
   - python
+  - uswgi
 
 django-deps:
     pkg.installed:
         - pkgs:
             - lynx
             - poppler-utils
-            - uwsgi
-            {% if grains['os_family'] == 'RedHat' %}
-            - uwsgi-plugin-python
-            {% endif %}
             - {{ django.deps.freetype }}
             - {{ django.deps.png }}
             - {{ django.deps.jpeg }}
@@ -35,7 +33,7 @@ git-django-prod:
 
 /srv/django/venv:
   virtualenv.managed:
-    - python: python3.5
+    - python: python3.4
     - requirements: /srv/django/elevennote/requirements/production.txt
     - require:
       - sls: python
@@ -52,3 +50,17 @@ git-django-prod:
     - template: jinja
     - require:
       - git: git-django-prod
+
+uwsgi-django-config:
+  file.managed:
+    - name: {{ global.config_prefix }}/uwsgi.d/django.ini
+    - user: root
+    - group: {{ global.group }}
+    - mode: 664
+    - makedirs: True
+    - source: salt://django/files/uwsgi-django.ini
+    - template: jinja
+    - require:
+       - pkg: uwsgi-plugin-python3
+       - file: uwsgi-config-dir
+       - file: uwsgi-log-dir

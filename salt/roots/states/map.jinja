@@ -1,0 +1,14 @@
+{% set global = salt['grains.filter_by']({
+    'default': {
+        'group': 'wheel',
+        'config_prefix': '/etc',
+    },
+    'Debian': {
+        'group': 'root',
+        'config_prefix': '/etc',
+    },
+    'FreeBSD': {
+        'group': 'wheel',
+        'config_prefix': '/usr/local/etc',
+    },
+}, merge=salt['pillar.get']('global:lookup')) %}
