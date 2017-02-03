@@ -27,21 +27,21 @@ nginx-service:
 
 nginx-selinx:
   file.managed:
-    - name: /root/nginx-django-socket.pp
+    - name: /root/nginx.pp
     - user: root
     - group: root
     - mode: 644
-    - source: salt://nginx/files/nginx-django-socket.pp
+    - source: salt://nginx/files/nginx.pp
     - require_in:
-      - cmd: /usr/sbin/semodule -i /root/nginx-django-socket.pp
+      - cmd: /usr/sbin/semodule -i /root/nginx.pp
 
   cmd.run:
-    - name: /usr/sbin/semodule -i /root/nginx-django-socket.pp
+    - name: /usr/sbin/semodule -i /root/nginx.pp
     - onchanges:
-      - file: /root/nginx-django-socket.pp
+      - file: /root/nginx.pp
 
   selinux.module:
-    - name: nginx-django-socket
+    - name: nginx
     - module_state: enabled
     - require:
       - pkg: policycoreutils
