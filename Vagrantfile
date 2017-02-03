@@ -12,7 +12,7 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
-  config.vm.synced_folder ".", "/vagrant", type: "nfs"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
   config.vm.provision "shell", inline: $script
 
   config.vm.define "salt", primary: true do |master|
