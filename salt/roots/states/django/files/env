@@ -5,7 +5,7 @@
 {% set allowed_hosts = salt['pillar.get']('django:allowed_hosts', 'localhost') %}
 
 # General settings
-DJANGO_ADMIN_URL=
+DJANGO_ADMIN_URL=^admin/
 DJANGO_SETTINGS_MODULE=config.settings.production
 DJANGO_SECRET_KEY=vw^-h)eaizhrg5_+^k_c3lh(i)r#2@imc7&ajldwh*r0)an+x3
 DJANGO_ALLOWED_HOSTS={{ allowed_hosts }}
