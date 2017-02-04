@@ -9,6 +9,7 @@ include:
   - nginx
   - supervisor
   - uwsgi
+  - django.code
   - django.collectstatic
 
 django-deps:
@@ -26,16 +27,8 @@ django-deps:
     - user: vagrant
     - group: vagrant
     - dir_mode: 775
-
-git-django-prod:
-  git.latest:
-    - name: https://github.com/sixfeetup/ElevenNote.git
-    - user: vagrant
-    - target: /srv/django
-    - require:
-      - file: /srv/django
     - require_in:
-      - module: django_collectstatic
+      - git: git-django-prod
 
 /srv/django/venv:
   virtualenv.managed:
