@@ -360,6 +360,8 @@ master: salt.local
 #    interface: eth0
 #    cidr: '10.0.0.0/8'
 
+mine_interval: 1
+
 # Windows platforms lack posix IPC and must rely on slower TCP based inter-
 # process communications. Set ipc_mode to 'tcp' on such systems
 #ipc_mode: ipc

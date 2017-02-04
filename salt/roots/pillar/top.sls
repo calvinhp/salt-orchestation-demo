@@ -3,6 +3,7 @@ base:
     - developers
     - postgresql
     - django
+    - loadbalancer
   'db':
     - dbas
     - postgresql
