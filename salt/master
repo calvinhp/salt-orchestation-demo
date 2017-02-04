@@ -338,11 +338,20 @@ publisher_acl:
 
 # The external auth system uses the Salt auth modules to authenticate and
 # validate users to access areas of the Salt system.
-#external_auth:
-#  pam:
-#    fred:
-#      - test.*
-#
+external_auth:
+  pam:
+    vagrant:
+      - .*
+      - '@wheel'
+      - '@runner'
+      - '@jobs'
+    dev1:
+      - 'app*':
+        - .*
+      - '@wheel'
+      - '@runner'
+      - '@jobs'
+
 # Time (in seconds) for a newly generated token to live. Default: 12 hours
 #token_expire: 43200
 #
@@ -1044,3 +1053,7 @@ file_roots:
 # The value of the parameters can be either one module or a comma separated list of them.
 #thin_extra_mods: foo,bar
 
+rest_cherrypy:
+  port: 8000
+  ssl_crt: /etc/pki/tls/certs/localhost.crt
+  ssl_key: /etc/pki/tls/certs/localhost.key
