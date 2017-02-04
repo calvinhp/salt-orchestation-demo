@@ -1,5 +1,8 @@
 {% from "map.jinja" import global with context %}
 
+include:
+  - python
+
 haproxyctl:
   pip.installed
 
