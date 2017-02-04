@@ -1052,8 +1052,3 @@ file_roots:
 # The modules should be named by the names they are actually imported inside the Python.
 # The value of the parameters can be either one module or a comma separated list of them.
 #thin_extra_mods: foo,bar
-
-rest_cherrypy:
-  port: 8000
-  ssl_crt: /etc/pki/tls/certs/localhost.crt
-  ssl_key: /etc/pki/tls/certs/localhost.key

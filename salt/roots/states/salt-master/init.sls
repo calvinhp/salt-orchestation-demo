@@ -1,3 +1,12 @@
+{% from "map.jinja" import global with context %}
+
+jq:
+  pkg.installed
+
+salt-master:
+  service.running:
+    - enable: true
+
 salt-api:
   pkg:
     - installed
@@ -17,3 +26,21 @@ generate-master-certs:
       - pkg: pyOpenSSL
     - unless:
       - ls /etc/pki/tls/certs/localhost.crt
+
+/etc/salt/master.d/api.conf:
+  file.managed:
+    - user: root
+    - group: {{ global.group }}
+    - mode: 664
+    - source: salt://salt-master/files/api.conf
+    - listen_in:
+      - service: salt-master
+
+/etc/salt/master.d/reactor.conf:
+  file.managed:
+    - user: root
+    - group: {{ global.group }}
+    - mode: 664
+    - source: salt://salt-master/files/reactor.conf
+    - listen_in:
+      - service: salt-master
