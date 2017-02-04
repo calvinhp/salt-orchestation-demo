@@ -32,15 +32,15 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.define "proxy", primary: true do |proxy|
-    proxy.vm.hostname = "proxy"
-    proxy.vm.network "private_network", ip: "10.10.10.100"
+  config.vm.define "db" do |db|
+    db.vm.hostname = "db"
+    db.vm.network "private_network", ip: "10.10.10.101"
     config.vm.provision :salt do |salt|
       salt.run_highstate = true
-      salt.grains_config = "salt/grains-proxy.yml"
+      salt.grains_config = "salt/grains-db.yml"
     end
     config.vm.provider "virtualbox" do |v|
-        v.customize ["modifyvm", :id, "--memory", 256]
+        v.customize ["modifyvm", :id, "--memory", 1024]
         v.customize ["modifyvm", :id, "--cpus", 1]
         v.linked_clone = true
     end
@@ -62,15 +62,15 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.define "db" do |db|
-    db.vm.hostname = "db"
-    db.vm.network "private_network", ip: "10.10.10.101"
+  config.vm.define "proxy", primary: true do |proxy|
+    proxy.vm.hostname = "proxy"
+    proxy.vm.network "private_network", ip: "10.10.10.100"
     config.vm.provision :salt do |salt|
       salt.run_highstate = true
-      salt.grains_config = "salt/grains-db.yml"
+      salt.grains_config = "salt/grains-proxy.yml"
     end
     config.vm.provider "virtualbox" do |v|
-        v.customize ["modifyvm", :id, "--memory", 1024]
+        v.customize ["modifyvm", :id, "--memory", 256]
         v.customize ["modifyvm", :id, "--cpus", 1]
         v.linked_clone = true
     end
