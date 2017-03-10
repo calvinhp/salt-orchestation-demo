@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
     master.vm.synced_folder "salt/roots/formulas", "/srv/formulas/", type: "nfs"
     master.vm.synced_folder "salt/roots/pillar", "/srv/pillar/", type: "nfs"
     master.vm.synced_folder "salt/roots/reactor", "/srv/reactor/", type: "nfs"
-    config.vm.provision :salt do |salt|
+    master.vm.provision :salt do |salt|
       salt.install_master = true
       salt.grains_config = "salt/grains-master.yml"
     end
@@ -36,11 +36,11 @@ Vagrant.configure("2") do |config|
   config.vm.define "db" do |db|
     db.vm.hostname = "db"
     db.vm.network "private_network", ip: "10.10.10.101"
-    config.vm.provision :salt do |salt|
+    db.vm.provision :salt do |salt|
       salt.run_highstate = true
       salt.grains_config = "salt/grains-db.yml"
     end
-    config.vm.provider "virtualbox" do |v|
+    db.vm.provider "virtualbox" do |v|
         v.customize ["modifyvm", :id, "--memory", 1024]
         v.customize ["modifyvm", :id, "--cpus", 1]
         v.linked_clone = true
@@ -51,11 +51,11 @@ Vagrant.configure("2") do |config|
     config.vm.define "app#{i}" do |node|
       node.vm.hostname = "app#{i}"
       node.vm.network "private_network", ip: "10.10.10.#{i+10}"
-      config.vm.provision :salt do |salt|
+      node.vm.provision :salt do |salt|
         salt.run_highstate = true
         salt.grains_config = "salt/grains-app.yml"
       end
-      config.vm.provider "virtualbox" do |v|
+      node.vm.provider "virtualbox" do |v|
           v.customize ["modifyvm", :id, "--memory", 512]
           v.customize ["modifyvm", :id, "--cpus", 1]
           v.linked_clone = true
@@ -66,11 +66,11 @@ Vagrant.configure("2") do |config|
   config.vm.define "proxy", primary: true do |proxy|
     proxy.vm.hostname = "proxy"
     proxy.vm.network "private_network", ip: "10.10.10.100"
-    config.vm.provision :salt do |salt|
+    proxy.vm.provision :salt do |salt|
       salt.run_highstate = true
       salt.grains_config = "salt/grains-proxy.yml"
     end
-    config.vm.provider "virtualbox" do |v|
+    proxy.vm.provider "virtualbox" do |v|
         v.customize ["modifyvm", :id, "--memory", 256]
         v.customize ["modifyvm", :id, "--cpus", 1]
         v.linked_clone = true

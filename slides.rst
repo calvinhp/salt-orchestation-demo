@@ -15,7 +15,7 @@
      limitations under the License.
 
 :title: Open Source Deployment Automation and Orchestration with SaltStack
-:event: PyTennessee 2017
+:event: Pythology March 2017
 :author: Calvin Hendryx-Parker
 :pygments: tango
 :css: custom.css
