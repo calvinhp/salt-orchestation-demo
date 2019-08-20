@@ -18,8 +18,5 @@ virtualenv:
     - require:
       - pkg: pip
 
-python34:
-  pkg.installed
-
-python34-devel:
+python3-all-dev:
   pkg.installed

@@ -38,9 +38,9 @@ supervisord-conf:
 
 supervisord-systemd:
   file.managed:
-    - name: /usr/lib/systemd/system/supervisord.service
+    - name: {{ supervisor.service_file }}
     - user: root
-    - group: wheel
+    - group: {{ global.group }}
     - mode: 644
     - source: salt://supervisor/files/supervisor.systemd
 

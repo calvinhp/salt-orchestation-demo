@@ -5,9 +5,9 @@ After=network.target
 
 [Service]
 Type=forking
-ExecStart=/usr/bin/supervisord -c /etc/supervisord.conf
-ExecReload=/usr/bin/supervisorctl reload
-ExecStop=/usr/bin/supervisorctl shutdown
+ExecStart=/usr/local/bin/supervisord -c /etc/supervisor/supervisord.conf
+ExecReload=/usr/local/bin/supervisorctl reload
+ExecStop=/usr/local/bin/supervisorctl shutdown
 User=root
 
 [Install]

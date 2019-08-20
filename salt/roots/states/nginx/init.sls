@@ -1,8 +1,5 @@
 {% from "map.jinja" import global with context %}
 
-include:
-  - selinux
-
 nginx:
   pkg.installed
 
@@ -24,25 +21,3 @@ nginx-service:
       - file: nginx-config
     - watch:
       - file: nginx-config
-
-nginx-selinx:
-  file.managed:
-    - name: /root/nginx.pp
-    - user: root
-    - group: root
-    - mode: 644
-    - source: salt://nginx/files/nginx.pp
-    - require_in:
-      - cmd: /usr/sbin/semodule -i /root/nginx.pp
-
-  cmd.run:
-    - name: /usr/sbin/semodule -i /root/nginx.pp
-    - onchanges:
-      - file: /root/nginx.pp
-
-  selinux.module:
-    - name: nginx
-    - module_state: enabled
-    - require:
-      - pkg: policycoreutils
-      - pkg: policycoreutils-python

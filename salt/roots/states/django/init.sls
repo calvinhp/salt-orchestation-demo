@@ -32,13 +32,13 @@ django-deps:
 
 /srv/django/venv:
   virtualenv.managed:
-    - python: python3.4
+    - python: python3.6
     - requirements: /srv/django/elevennote/requirements/production.txt
     - require:
       - sls: python
       - pip: virtualenv
       - git: git-django-prod
-      - pkg: install-postgres-dev-package
+      - pkg: install-postgres-dev-packages
     - require_in:
       - module: django_collectstatic
 
@@ -96,15 +96,6 @@ supervisor-django-config:
       - file: uwsgi-django-config
     - require_in:
       - service: supervisord-service
-
-vagrant:
-  group.present:
-    - addusers:
-      - nginx
-    - require:
-      - pkg: nginx
-    - listen_in:
-      - service: nginx-service
 
 django_migrate:
   module.run:
