@@ -1,39 +1,46 @@
-# -*- coding: utf-8 -*-
-# vim: ft=yaml
----
 # Port to use for the cluster -- can be used to provide a non-standard port
 # NOTE: If already set in the minion config, that value takes priority
+
+{%- if not (grains.os_family == 'Debian' or grains.osfinger == 'Leap-15') %}
 postgres.port: '5432'
+{%- else %}
+postgres.port: '5433'
+{%- endif %}
 
 postgres:
   # UPSTREAM REPO
-  # Set true to configure upstream postgresql.org repository for YUM/APT/ZYPP
-  use_upstream_repo: false
-  # Version to install from upstream repository (if upstream_repo: true)
+  # Set True to configure upstream postgresql.org repository for YUM/APT/ZYPP
+  {%- if not (grains.os_family == 'Debian' or grains.osfinger == 'CentOS-6') %}
+  use_upstream_repo: False
+  {%- else %}
+  use_upstream_repo: True
+  # Version to install from upstream repository (if upstream_repo: True)
+  {%- if not (grains.os_family == 'Debian') %}
+  version: '9.6'
+  {%- else %}
   version: '10'
-  # Set true to add a file in /etc/profile.d adding the bin dir in $PATH
-  # as packages from upstream put them somewhere like /usr/pgsql-10/bin
-  add_profile: false
-  # If automatic package installation fails, use `fromrepo` to specify the
-  # upstream repo to install packages from [#133, #185] (if upstream_repo: true)
-  fromrepo: 'jessie-pgdg'
+  {%- endif %}
+  # # Set True to add a file in /etc/profile.d adding the bin dir in $PATH
+  # # as packages from upstream put them somewhere like /usr/pgsql-10/bin
+  # add_profile: False
+  # # If automatic package installation fails, use `fromrepo` to specify the
+  # # upstream repo to install packages from [#133, #185] (if upstream_repo: True)
+  # fromrepo: 'jessie-pgdg'
+  {%- endif %}
 
-  ### MACOS
-  # Set to 'postgresapp' OR 'homebrew' for MacOS
-  # use_upstream_repo: 'postgresapp'
-  # use_upstream_repo: 'homebrew'
+  # ### MACOS
+  # # Set to 'postgresapp' OR 'homebrew' for MacOS
+  # # use_upstream_repo: 'postgresapp'
+  # # use_upstream_repo: 'homebrew'
 
-  # PACKAGE
-  # These pillars are typically never required.
-  # pkg: 'postgresql'
-  # pkg_client: 'postgresql-client'
-  # service:
-  #   name: 'postgresql'
-  #   flags: -w -s -m fast
-  #   sysrc: true
-  pkgs_extra:
-    - postgresql-contrib
-    - postgresql-plpython
+  # # PACKAGE
+  # # These pillars are typically never required.
+  # # pkg: 'postgresql'
+  # # pkg_client: 'postgresql-client'
+  # # service: postgresql
+  # pkgs_extra:
+  #   - postgresql-contrib
+  #   - postgresql-plpython
 
   # CLUSTER
   # The default `encoding` is derived from the `locale` so not recommended
@@ -42,14 +49,14 @@ postgres:
     locale: en_US.UTF-8
     # encoding: UTF8
 
-  # 'Alternatives system' priority incremental. 0 disables feature.
-  linux:
-    altpriority: 30
-
-  # macos limits
-  limits:
-    soft: 64000
-    hard: 128000
+  # #'Alternatives system' priority incremental. 0 disables feature.
+  # linux:
+  #   altpriority: 30
+  #
+  # # macos limits
+  # limits:
+  #   soft: 64000
+  #   hard: 128000
 
   # POSTGRES
   # Append the lines under this item to your postgresql.conf file.
@@ -86,21 +93,21 @@ postgres:
     - ['users_as_appuser', 'jsmith', 'connuser']
 
   # Backup extension for configuration files, defaults to ``.bak``.
-  # Set ``false`` to stop creation of backups when config files change.
+  # Set ``False`` to stop creation of backups when config files change.
   {%- if salt['status.time']|default(none) is callable %}
   config_backup: ".backup@{{ salt['status.time']('%y-%m-%d_%H:%M:%S') }}"
   {%- endif %}
 
-  {%- if grains['init'] == 'unknown' %}
-
-  # If Salt is unable to detect init system running in the scope of state run,
-  # probably we are trying to bake a container/VM image with PostgreSQL.
-  # Use ``bake_image`` setting to control how PostgreSQL will be started: if set
-  # to ``true`` the raw ``pg_ctl`` will be utilized instead of packaged init
-  # script, job or unit run with Salt ``service`` state.
-  bake_image: true
-
-  {%- endif %}
+  {# {%- if grains['init'] == 'unknown' %} #}
+  {#  #}
+  {# # If Salt is unable to detect init system running in the scope of state run, #}
+  {# # probably we are trying to bake a container/VM image with PostgreSQL. #}
+  {# # Use ``bake_image`` setting to control how PostgreSQL will be started: if set #}
+  {# # to ``True`` the raw ``pg_ctl`` will be utilized instead of packaged init #}
+  {# # script, job or unit run with Salt ``service`` state. #}
+  {# bake_image: True #}
+  {#  #}
+  {# {%- endif %} #}
 
   # Create/remove users, tablespaces, databases, schema and extensions.
   # Each of these dictionaries contains PostgreSQL entities which
@@ -109,7 +116,7 @@ postgres:
   #
   # Format is the following:
   #
-  # <users|tablespaces|databases|schemas|extensions>:
+  #<users|tablespaces|databases|schemas|extensions>:
   #  NAME:
   #    ensure: <present|absent>  # 'present' is the default
   #    ARGUMENT: VALUE
@@ -121,31 +128,31 @@ postgres:
   # For example, the Pillar:
   #
   # users:
-  #  testUser:
-  #    password: test
+  #   testUser:
+  #     password: test
   #
   # will render such state:
   #
   # postgres_user-testUser:
-  #  postgres_user.present:
-  #    - name: testUser
-  #    - password: test
+  #   postgres_user.present:
+  #     - name: testUser
+  #     - password: test
   users:
     localUser:
       ensure: present
       password: '98ruj923h4rf'
-      createdb: false
-      createroles: false
-      inherit: true
-      replication: false
+      createdb: False
+      createroles: False
+      inherit: True
+      replication: False
 
     remoteUser:
       ensure: present
       password: '98ruj923h4rf'
-      createdb: false
-      createroles: false
-      inherit: true
-      replication: false
+      createdb: False
+      createroles: False
+      inherit: True
+      replication: False
 
     absentUser:
       ensure: absent
@@ -159,24 +166,26 @@ postgres:
   # databases to be created
   databases:
     db1:
-      owner: 'localUser'
-      template: 'template0'
-      lc_ctype: 'en_US.UTF-8'
-      lc_collate: 'en_US.UTF-8'
+      owner: localUser
+      template: template0
+      lc_ctype: en_US.UTF-8
+      lc_collate: en_US.UTF-8
     db2:
-      owner: 'remoteUser'
-      template: 'template0'
-      lc_ctype: 'en_US.UTF-8'
-      lc_collate: 'en_US.UTF-8'
-      tablespace: 'my_space'
+      owner: remoteUser
+      template: template0
+      lc_ctype: en_US.UTF-8
+      lc_collate: en_US.UTF-8
+      tablespace: my_space
       # set custom schema
       schemas:
         public:
-          owner: 'localUser'
+          owner: localUser
       # enable per-db extension
+      {%- if grains.os_family == 'Debian' and grains.osfinger != 'Debian-8' %}
       extensions:
         uuid-ossp:
           schema: 'public'
+      {%- endif %}
 
   # optional schemas to enable on database
   schemas:
@@ -185,15 +194,17 @@ postgres:
       owner: localUser
 
   # optional extensions to install in schema
+  {%- if grains.os_family == 'Debian' and grains.osfinger != 'Debian-8' %}
   extensions:
-    # postgis: {}
     uuid-ossp:
       schema: uuid-ossp
       maintenance_db: db1
+    # postgis: {}
+  {%- endif %}
 
-  remove:
-    data: true
-    multiple_releases: true
-    releases: ['9.6', '10']
+  # remove:
+  #   data: True
+  #   multiple_releases: True
+  #   releases: ['9.6', '10',]
 
 # vim: ft=yaml ts=2 sts=2 sw=2 et
