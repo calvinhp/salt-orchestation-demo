@@ -1,0 +1,38 @@
+{% set base = salt['grains.filter_by']({
+    'default': {
+        'ack': 'ack',
+        'bzip2': 'bzip2',
+        'libxml2': 'libxml2',
+        'libxslt': 'libxslt',
+        'sqlite': 'sqlite3',
+        'vim': 'vim',
+        'ntpd': 'ntpd',
+    },
+    'RedHat': {
+        'ack': 'ack',
+        'bzip2': 'bzip2-devel',
+        'libxml2': 'libxml2-devel',
+        'libxslt': 'libxslt-devel',
+        'sqlite': 'sqlite-devel',
+        'vim': 'vim-enhanced',
+        'ntpd': 'ntp',
+    },
+    'Debian': {
+        'ack': 'ack-grep',
+        'bzip2': 'bzip2',
+        'libxml2': 'libxml2-dev',
+        'libxslt': 'libxslt1-dev',
+        'sqlite': 'libsqlite3-dev',
+        'vim': 'vim',
+        'ntpd': 'ntp',
+    },
+    'FreeBSD': {
+        'ack': 'ack',
+        'bzip2': 'bzip2',
+        'libxml2': 'libxml2',
+        'libxslt': 'libxslt',
+        'sqlite': 'sqlite3',
+        'vim': 'vim',
+        'ntpd': 'openntpd',
+    }
+}, merge=salt['pillar.get']('base:lookup')) %}
