@@ -16,14 +16,14 @@ salt-api:
     - require:
       - module: generate-master-certs
 
-pyOpenSSL:
+python-openssl:
   pkg.installed
 
 generate-master-certs:
   module.run:
     - name: tls.create_self_signed_cert
     - require:
-      - pkg: pyOpenSSL
+      - pkg: python-openssl
     - unless:
       - ls /etc/pki/tls/certs/localhost.crt
 
