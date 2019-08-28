@@ -1,4 +1,4 @@
-{% for app_server in ['app1','app2','app3'] %}
+{% for app_server in ['app1','app2'] %}
 release-latest-{{app_server}}:
   salt.state:
     - tgt: {{ app_server }}
