@@ -33,7 +33,7 @@ django-deps:
 /srv/django/venv:
   virtualenv.managed:
     - python: python3.6
-    - requirements: /srv/django/elevennote/requirements/production.txt
+    - requirements: /srv/django/requirements/main.txt
     - require:
       - sls: python
       - pip: virtualenv
@@ -42,7 +42,7 @@ django-deps:
     - require_in:
       - module: django_collectstatic
 
-/srv/django/elevennote/config/settings/.env:
+/srv/django/config/settings/.env:
   file.managed:
     - user: vagrant
     - group: vagrant
@@ -102,7 +102,7 @@ django_migrate:
     - name: django.command
     - settings_module: config.settings.production
     - bin_env: /srv/django/venv
-    - pythonpath: /srv/django/{{ salt['pillar.get']('django:projectname') }}
+    - pythonpath: /srv/django
     - command: migrate
     - require:
       - git: git-django-prod

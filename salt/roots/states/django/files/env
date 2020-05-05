@@ -1,7 +1,7 @@
-{% set db_user = salt['pillar.get']('django:db_user', 'elevennote') %}
-{% set db_pass = salt['pillar.get']('postgres:users:elevennote_prod:password') %}
+{% set db_user = salt['pillar.get']('django:db_user', 'sixienote') %}
+{% set db_pass = salt['pillar.get']('postgres:users:sixienote_prod:password') %}
 {% set db_host = salt['pillar.get']('django:db_host', 'localhost') %}
-{% set db_name = salt['pillar.get']('django:db_name', 'elevennote') %}
+{% set db_name = salt['pillar.get']('django:db_name', 'sixienote') %}
 {% set allowed_hosts = salt['pillar.get']('django:allowed_hosts', 'localhost') %}
 
 # General settings
@@ -15,3 +15,5 @@ DATABASE_URL=psql://{{ db_user }}:{{ db_pass }}@{{ db_host }}:5432/{{ db_name }}
 
 # Security! Better to use DNS for this task, but you can use redirects
 DJANGO_SECURE_SSL_REDIRECT=False
+
+USE_DOCKER=False

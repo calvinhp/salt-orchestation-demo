@@ -3,4 +3,4 @@ django_collectstatic:
     - name: django.collectstatic
     - settings_module: config.settings.production
     - bin_env: /srv/django/venv
-    - pythonpath: /srv/django/{{ salt['pillar.get']('django:projectname') }}
+    - pythonpath: /srv/django

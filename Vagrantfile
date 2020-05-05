@@ -6,6 +6,7 @@ $script = <<SCRIPT
 apt-get -y update
 apt-get -y install avahi-daemon avahi-utils avahi-dnsconfd
 apt-get -y install libnss-mdns
+apt-get -y install python-pip
 systemctl enable avahi-dnsconfd
 systemctl start avahi-dnsconfd
 SCRIPT

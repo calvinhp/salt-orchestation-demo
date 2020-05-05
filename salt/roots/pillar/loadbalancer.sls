@@ -1,3 +1,6 @@
 mine_functions:
   test.ping: []
-  network.ipaddrs: [enp0s8]
+  network.ip_addrs:
+    interface: enp0s8
+    cidr: 10.10.10.0/24
+

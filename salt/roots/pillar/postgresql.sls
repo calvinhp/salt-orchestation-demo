@@ -77,8 +77,8 @@ postgres:
   # If ``acls`` item value is empty ('', [], null), then the contents of
   # ``pg_hba.conf`` file will not be touched at all.
   acls:
-    - ['host', 'elevennote_dev', 'elevennote_dev', '10.10.10.0/24']
-    - ['host', 'elevennote_prod', 'elevennote_prod', '10.10.10.0/24']
+    - ['host', 'sixienote_dev', 'sixienote_dev', '10.10.10.0/24']
+    - ['host', 'sixienote_prod', 'sixienote_prod', '10.10.10.0/24']
 
   # Backup extension for configuration files, defaults to ``.bak``.
   # Set ``false`` to stop creation of backups when config files change.
@@ -126,7 +126,7 @@ postgres:
   #    - name: testUser
   #    - password: test
   users:
-    elevennote_dev:
+    sixienote_dev:
       ensure: present
       password: '98ruj923h4rf'
       createdb: false
@@ -134,7 +134,7 @@ postgres:
       inherit: true
       replication: false
 
-    elevennote_prod:
+    sixienote_prod:
       ensure: present
       password: '98ruj923h4rf'
       createdb: false
@@ -145,13 +145,13 @@ postgres:
 
   # databases to be created
   databases:
-    elevennote_dev:
-      owner: 'elevennote_dev'
+    sixienote_dev:
+      owner: 'sixienote_dev'
       template: 'template0'
       lc_ctype: 'en_US.UTF-8'
       lc_collate: 'en_US.UTF-8'
-    elevennote_prod:
-      owner: 'elevennote_prod'
+    sixienote_prod:
+      owner: 'sixienote_prod'
       template: 'template0'
       lc_ctype: 'en_US.UTF-8'
       lc_collate: 'en_US.UTF-8'
